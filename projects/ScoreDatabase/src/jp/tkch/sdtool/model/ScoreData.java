@@ -34,6 +34,16 @@ public class ScoreData {
 		setIndex(x0);
 	}
 
+	public ScoreData(ScoreData sd0){
+		this();
+		setId(sd0.getId());
+		setTitle(sd0.getTitle());
+		setIndex(sd0.getIndex());
+		for(ScoreDataParameter param : sd0.params){
+			this.params.add(param);
+		}
+	}
+
 	public int getId() {
 		return id;
 	}
