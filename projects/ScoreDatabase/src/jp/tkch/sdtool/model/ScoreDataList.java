@@ -67,6 +67,16 @@ public class ScoreDataList {
 		return max;
 	}
 
+	public ScoreDataList createList(Comparator<ScoreData> compr){
+		ScoreDataList nlist = new ScoreDataList(comparator);
+		for(ScoreData sdata : scores){
+			if( compr.equals(sdata) ){
+				nlist.add(sdata);
+			}
+		}
+		return nlist;
+	}
+
 	public ScoreData[] toArray(){
 		return scores.toArray(new ScoreData[scores.size()]);
 	}
