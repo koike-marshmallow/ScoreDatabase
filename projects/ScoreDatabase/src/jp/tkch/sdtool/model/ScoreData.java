@@ -112,4 +112,8 @@ public class ScoreData {
 		params.add(new ScoreDataParameter(k0, v0));
 	}
 
+	public ScoreDataParameter[] getParameters(){
+		return params.toArray(new ScoreDataParameter[params.size()]);
+	}
+
 }
