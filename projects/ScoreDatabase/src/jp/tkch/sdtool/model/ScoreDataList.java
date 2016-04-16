@@ -1,21 +1,23 @@
 package jp.tkch.sdtool.model;
 
-import java.text.Collator;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
-import java.util.Locale;
+
+import jp.tkch.sdtool.model.comparator.ScoreDataIdComparator;
 
 public class ScoreDataList {
+
 	private List<ScoreData> scores;
-	private Comparator<Object> comparator;
+	private Comparator<ScoreData> comparator;
 
 	public ScoreDataList(){
 		scores = new ArrayList<ScoreData>();
-		comparator = Collator.getInstance(Locale.JAPANESE);
+		comparator = null;
 	}
 
-	public ScoreDataList(Comparator<Object> cmp0){
+	public ScoreDataList(Comparator<ScoreData> cmp0){
 		scores = new ArrayList<ScoreData>();
 		comparator = cmp0;
 	}
@@ -37,12 +39,16 @@ public class ScoreDataList {
 			remove(insert.getId());
 		}
 
-		idx = 0;
-		while(
-			idx < scores.size() &&
-			(comparator.compare(scores.get(idx).getIndex(), insert.getIndex()) <= 0)
-		){
-			idx++;
+		if( comparator != null ){
+			idx = 0;
+			while(
+				idx < scores.size() &&
+				(comparator.compare(scores.get(idx), insert) <= 0)
+			){
+				idx++;
+			}
+		}else{
+			idx = scores.size();
 		}
 
 		scores.add(idx, insert);
@@ -65,27 +71,26 @@ public class ScoreDataList {
 	}
 
 	public int getMaxId(){
-		int max = 0;
-		for(int i=0; i<scores.size(); i++){
-			if( max < scores.get(i).getId() ){
-				max = scores.get(i).getId();
+		return Collections.max(scores, new ScoreDataIdComparator()).getId();
+	}
+
+	public void setComparator(Comparator<ScoreData> c0){
+		comparator = c0;
+		Collections.sort(scores, c0);
+	}
+
+	public ScoreDataList createDataList(ScoreDataFinder finder){
+		ScoreDataList result = new ScoreDataList();
+		for(ScoreData sd : scores){
+			if( finder.isMatch(sd) ){
+				result.add(sd);
 			}
 		}
-		return max;
+		return result;
 	}
 
 	public int getDataCount(){
 		return scores.size();
-	}
-
-	public ScoreDataList createList(Comparator<ScoreData> compr){
-		ScoreDataList nlist = new ScoreDataList(comparator);
-		for(ScoreData sdata : scores){
-			if( compr.equals(sdata) ){
-				nlist.add(sdata);
-			}
-		}
-		return nlist;
 	}
 
 	public ScoreData[] toArray(){

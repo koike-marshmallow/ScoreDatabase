@@ -20,6 +20,10 @@ public class ScoreDataListTableModel implements TableModel {
 		list = l0;
 	}
 
+	public ScoreDataList getScoreDataList(){
+		return list;
+	}
+
 	@Override
 	public int getRowCount() {
 		return list.getDataCount();

@@ -3,6 +3,8 @@ package jp.tkch.sdtool.gui;
 import java.awt.BorderLayout;
 import java.awt.Component;
 import java.awt.FlowLayout;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 
 import javax.swing.JButton;
 import javax.swing.JFrame;
@@ -12,6 +14,8 @@ import javax.swing.JTable;
 
 import jp.tkch.sdtool.model.ScoreData;
 import jp.tkch.sdtool.model.ScoreDataList;
+import jp.tkch.sdtool.model.comparator.ScoreDataIdComparator;
+import jp.tkch.sdtool.model.comparator.ScoreDataIndexComparator;
 
 public class ScoreTableView extends JFrame {
 	private static final long serialVersionUID = 1L;
@@ -19,7 +23,6 @@ public class ScoreTableView extends JFrame {
 	private JPanel pTop;
 	private JPanel pControl;
 	private JTable tScoreTable;
-	private ScoreDataListTableModel tableModel;
 
 	// ウィンドウ本体
 	public ScoreTableView() {
@@ -39,25 +42,50 @@ public class ScoreTableView extends JFrame {
 	}
 
 	public void setScoreDataListTableModel(ScoreDataListTableModel model){
-		tableModel = model;
-		tScoreTable = new JTable(tableModel);
-		pTop.add(new JScrollPane(tScoreTable), BorderLayout.CENTER);
+		tScoreTable.setModel(model);
 	}
 
     public static void main(String[] args) {
         ScoreTableView frm = new ScoreTableView();   // ウィンドウ作成
-        frm.addControlComponent(new JButton("追加"));
+        JButton btnAdd = new JButton("追加");
+        frm.addControlComponent(btnAdd);
         frm.addControlComponent(new JButton("編集"));
-        ScoreDataList list = new ScoreDataList();
+        ScoreDataList list = new ScoreDataList(new ScoreDataIndexComparator());
+        btnAdd.addActionListener(new DefaultActionListener(frm, list));
         list.add(new ScoreData(1001, "He is a pirate", "He is a pirate"));
         list.add(new ScoreData(1002, "My Heart Will Go On", "My Heart Will Go On"));
         list.add(new ScoreData(1003, "夢への冒険", "ユメヘノボウケン"));
+        printList(list);
+        frm.setScoreDataListTableModel(new ScoreDataListTableModel(list));
+        frm.setVisible(true);  // 表示
+        list.add(new ScoreData(1004, "マーチ「プロヴァンスの風」", "プロヴァンスノカゼ"));
+    }
+
+    public static void printList(ScoreDataList list){
         for(int i=0; i<list.getDataCount(); i++){
         	System.out.println(list.get(i).getId() + ": " + list.get(i).getTitle());
         }
-        frm.setScoreDataListTableModel(new ScoreDataListTableModel(list));
-        frm.setVisible(true);  // 表示
-        list.add(new ScoreData(1004, "マーチ「プロヴァンスの風」", "プロヴァンスの風"));
     }
+
+}
+
+
+class DefaultActionListener implements ActionListener{
+
+	ScoreDataList list;
+	ScoreTableView view;
+
+	public DefaultActionListener(ScoreTableView view, ScoreDataList list){
+		this.list = list;
+		this.view = view;
+	}
+
+ 	public void actionPerformed(ActionEvent e) {
+		// TODO 自動生成されたメソッド・スタブ
+		System.out.println("performerd");
+		list.setComparator(new ScoreDataIdComparator());
+		view.setScoreDataListTableModel(new ScoreDataListTableModel(list));
+	}
+
 
 }
