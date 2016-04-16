@@ -57,6 +57,13 @@ public class ScoreDataList {
 		}
 	}
 
+	public ScoreData get(int idx){
+		if( idx >= 0 && idx < scores.size() ){
+			return new ScoreData(scores.get(idx));
+		}
+		return null;
+	}
+
 	public int getMaxId(){
 		int max = 0;
 		for(int i=0; i<scores.size(); i++){
@@ -65,6 +72,10 @@ public class ScoreDataList {
 			}
 		}
 		return max;
+	}
+
+	public int getDataCount(){
+		return scores.size();
 	}
 
 	public ScoreDataList createList(Comparator<ScoreData> compr){

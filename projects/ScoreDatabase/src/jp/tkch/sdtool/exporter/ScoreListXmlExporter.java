@@ -22,7 +22,7 @@ public class ScoreListXmlExporter {
 
 	public static Element scoreDataToElement(Document doc, ScoreData sdata){
 		Element eScore = doc.createElement("score");
-		eScore.setAttribute("id", sdata.getId());
+		eScore.setAttribute("id", String.valueOf(sdata.getId()));
 
 		Element eTitle = doc.createElement("title");
 		eTitle.setAttribute("value", sdata.getTitle());
