@@ -116,4 +116,10 @@ implements ScoreDataFinder {
 		}
 		return false;
 	}
+
+	public String toString(){
+		String str = "keyword finder : [";
+		for(String word : keywords) str += word + ",";
+		return str + "]";
+	}
 }
