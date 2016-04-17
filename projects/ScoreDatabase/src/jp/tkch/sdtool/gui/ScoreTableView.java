@@ -8,6 +8,7 @@ import java.awt.event.ActionListener;
 
 import javax.swing.JButton;
 import javax.swing.JFrame;
+import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
@@ -23,6 +24,7 @@ public class ScoreTableView extends JFrame {
 	private JPanel pTop;
 	private JPanel pControl;
 	private JTable tScoreTable;
+	private JLabel itemCount;
 
 	// ウィンドウ本体
 	public ScoreTableView() {
@@ -34,6 +36,8 @@ public class ScoreTableView extends JFrame {
 		pTop.add(pControl, BorderLayout.PAGE_START);
 		tScoreTable = new JTable(10, 4);
 		pTop.add(new JScrollPane(tScoreTable), BorderLayout.CENTER);
+		itemCount = new JLabel("項目数: 0");
+		pTop.add(itemCount, BorderLayout.PAGE_END);
 		add(pTop);
 	}
 
@@ -43,6 +47,7 @@ public class ScoreTableView extends JFrame {
 
 	public void setScoreDataListTableModel(ScoreDataListTableModel model){
 		tScoreTable.setModel(model);
+		itemCount.setText("項目数: " + model.getRowCount());
 	}
 
     public static void main(String[] args) {

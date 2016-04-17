@@ -71,6 +71,7 @@ public class ScoreDataList {
 	}
 
 	public int getMaxId(){
+		if( scores.size() <= 0 ) return -1;
 		return Collections.max(scores, new ScoreDataIdComparator()).getId();
 	}
 
