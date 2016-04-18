@@ -50,6 +50,26 @@ public class ScoreTableView extends JFrame {
 		itemCount.setText("項目数: " + model.getRowCount());
 	}
 
+	public boolean isRowSelected(int row){
+		return tScoreTable.isRowSelected(row);
+	}
+
+	public int[] getSelectedRows(){
+		return tScoreTable.getSelectedRows();
+	}
+
+	public int getSelectedRowCount(){
+		return tScoreTable.getSelectedRowCount();
+	}
+
+	public int getRowCount(){
+		return tScoreTable.getRowCount();
+	}
+
+	public void setStatusMessage(String msg){
+		itemCount.setText(msg);
+	}
+
     public static void main(String[] args) {
         ScoreTableView frm = new ScoreTableView();   // ウィンドウ作成
         JButton btnAdd = new JButton("追加");
