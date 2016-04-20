@@ -13,6 +13,7 @@ public class CSSBlock {
 	}
 
 	public CSSBlock(String s0){
+		this();
 		selector = s0;
 	}
 
@@ -24,8 +25,9 @@ public class CSSBlock {
 		this.selector = selector;
 	}
 
-	public void addProperty(CSSProperty p0){
+	public CSSBlock addProperty(CSSProperty p0){
 		properties.add(p0);
+		return this;
 	}
 
 	public void clearProperty(){
