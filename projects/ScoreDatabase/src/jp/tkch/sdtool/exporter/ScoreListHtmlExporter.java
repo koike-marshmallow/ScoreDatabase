@@ -64,6 +64,10 @@ public class ScoreListHtmlExporter {
 		return label;
 	}
 
+	public Document getDocument(){
+		return doc;
+	}
+
 	public Element createStyleElement(){
 		CSSBlockList cssList = new CSSBlockList();
 
@@ -97,24 +101,20 @@ public class ScoreListHtmlExporter {
 	}
 
 	public Element createBody(){
+		ScoreListTableHtmlBuilder tableBuilder= new ScoreListTableHtmlBuilder(doc);
+		tableBuilder.setScoreDataList(list);
+		tableBuilder.setLabel(label);
+		tableBuilder.setWidthConfig(ScoreListTableHtmlBuilder.DEFAULT_WIDTH);
+
 		Element eMark = doc.createElement("p");
 		eMark.setTextContent("楽譜データベース");
 		Element eTitle = doc.createElement("h1");
 		eTitle.setTextContent("楽譜一覧");
-		Element eSubTitle = null;
-		if( label != null ){
-			eSubTitle = doc.createElement("h2");
-			eSubTitle.setTextContent(label);
-		}
-		Element eTable =
-			createScoreListTableElement(doc, list);
+		Element eTable = tableBuilder.buildScoreListTable();
 
 		Element eBody = doc.createElement("body");
-		eBody.appendChild(eMark)
-			.appendChild(eTitle);
-		if( eSubTitle != null ){
-			eBody.appendChild(eSubTitle);
-		}
+		eBody.appendChild(eMark);
+		eBody.appendChild(eTitle);
 		eBody.appendChild(eTable);
 
 		return eBody;
@@ -179,44 +179,6 @@ public class ScoreListHtmlExporter {
 			"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd");
 
 		return impl.createDocument("", "html", dtype);
-	}
-
-	public static Element createScoreListTableElement(Document doc, ScoreDataList list){
-		Element eTable = doc.createElement("table");
-		String[] heads = {"ID", "タイトル", "編曲者/作曲者", "出版社", "備考"};
-		String[] width = {"50px", "280px", "125px", "125px", "220px"};
-		eTable.appendChild(convertToTableRowElement(doc, heads, width, true));
-
-		for(int i=0; i<list.getDataCount(); i++){
-			eTable.appendChild(createScoreDataRowElement(doc, list.get(i)));
-		}
-
-		return eTable;
-	}
-
-	public static Element createScoreDataRowElement(Document doc, ScoreData data){
-		String[] strs = new String[5];
-		strs[0] = String.valueOf(data.getId());
-		strs[1] = data.getTitle();
-		strs[2] = data.getParameter("author");
-		strs[3] = data.getParameter("publisher");
-		strs[4] = data.getParameter("comment");
-		return convertToTableRowElement(doc, strs, null, false);
-	}
-
-	public static Element convertToTableRowElement
-	(Document doc, String[] strs, String[] width,  boolean isTh){
-		Element eTr = doc.createElement("tr");
-		String tagName = isTh ? "th" : "td";
-		for(int i=0; i<strs.length; i++){
-			Element eTd = doc.createElement(tagName);
-			eTd.setTextContent(strs[i]);
-			if( width != null && width.length > i ){
-				eTd.setAttribute("style", "width:" + width[i] + ";");
-			}
-			eTr.appendChild(eTd);
-		}
-		return eTr;
 	}
 
 	public static void main(String[] args)
