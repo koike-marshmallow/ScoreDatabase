@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8" standalone="no"?>
+<scores>
+  <score id="1001">
+    <title value="He is a pirate"/>
+    <index value="He is a pirate"/>
+    <param key="author" value=""/>
+    <param key="publisher" value="m8"/>
+    <param key="comment" value="ensemble"/>
+  </score>
+  <score id="1002">
+    <title value="My Heart Will Go On"/>
+    <index value="my heart will go on"/>
+    <param key="author" value=""/>
+    <param key="publisher" value=""/>
+    <param key="comment" value=""/>
+  </score>
+  <score id="1003">
+    <title value="夢への冒険"/>
+    <index value="ユメヘノボウケン"/>
+    <param key="author" value=""/>
+    <param key="publisher" value=""/>
+    <param key="comment" value=""/>
+  </score>
+</scores>

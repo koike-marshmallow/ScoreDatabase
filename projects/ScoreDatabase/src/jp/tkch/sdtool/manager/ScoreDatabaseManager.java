@@ -3,6 +3,8 @@ package jp.tkch.sdtool.manager;
 import java.awt.Component;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.File;
+import java.io.IOException;
 import java.util.ArrayDeque;
 import java.util.Queue;
 
@@ -10,6 +12,7 @@ import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 
+import jp.tkch.sdtool.exporter.ScoreListXmlExporter;
 import jp.tkch.sdtool.gui.ScoreDataEditorView;
 import jp.tkch.sdtool.gui.ScoreDataEditorViewListener;
 import jp.tkch.sdtool.gui.ScoreDataListTableModel;
@@ -54,12 +57,41 @@ ScoreDataSearchViewListener{
 		tableView.addControlComponent(ctrlAdd);
 		tableView.addControlComponent(ctrlSearch);
 		tableView.addControlComponent(ctrlEdit);
+		loadDatabase();
+		current = master;
 		reloadTable();
 		tableView.setVisible(true);
 	}
 
 	public void reloadTable(){
 		tableView.setScoreDataListTableModel(new ScoreDataListTableModel(current));
+	}
+	
+	public void saveDatabase(){
+		ScoreListXmlExporter exporter = new ScoreListXmlExporter();
+		exporter.setScoreDataList(master);
+		try{
+			if( !exporter.save(new File("db.xml")) ){
+				System.out.println("データ出力中にエラーが発生しました");
+			}
+		}catch(IOException e0){
+			System.out.println(e0.getMessage());
+		}
+	}
+	
+	public void loadDatabase(){
+		ScoreListXmlExporter exporter = new ScoreListXmlExporter();
+		try{
+			if( !exporter.load(new File("db.xml")) ){
+				System.out.println("データ読込中にエラーが発生しました");
+			}
+		}catch(IOException e0){
+			System.out.println(e0.getMessage());
+		}
+		if( exporter.getScoreDataList() != null ){
+			master = exporter.getScoreDataList();
+			master.setComparator(new ScoreDataIdComparator());
+		}
 	}
 
 
@@ -78,6 +110,7 @@ ScoreDataSearchViewListener{
 		}
 
 		master.add(sdata);
+		saveDatabase();
 		reloadTable();
 		return true;
 	}
@@ -98,6 +131,7 @@ ScoreDataSearchViewListener{
 		}
 
 		master.add(sdata);
+		saveDatabase();
 		reloadTable();
 		return true;
 	}
