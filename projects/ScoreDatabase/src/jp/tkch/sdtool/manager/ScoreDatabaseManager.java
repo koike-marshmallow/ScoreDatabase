@@ -115,10 +115,14 @@ ScoreDataSearchViewListener{
 			return false;
 		}
 		if( !isIndexValid(sdata.getIndex()) ){
+			int sel = JOptionPane.YES_OPTION;
 			if( parent != null ){
-				JOptionPane.showMessageDialog(parent, new JLabel("よみがなに無効な文字が含まれています"));
+				sel = JOptionPane.showConfirmDialog(
+					parent, new JLabel("よみがなに無効な文字が含まれています\nこのまま登録しますか？"));
 			}
-			return false;
+			if( sel != JOptionPane.YES_OPTION ){
+				return false;
+			}
 		}
 
 		master.add(sdata);
