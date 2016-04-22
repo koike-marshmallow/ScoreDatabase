@@ -18,17 +18,17 @@ public class DualScoreDataList {
 
 	public DualScoreDataList(){
 		comparator = null;
-		master = createList();
-		current = master;
+		master = createListInstance();
+		resetCurrent();
 	}
 
 	public DualScoreDataList(Comparator<ScoreData> c0){
 		comparator = c0;
-		master = createList();
-		current = master;
+		master = createListInstance();
+		resetCurrent();
 	}
 
-	ScoreDataList createList(){
+	ScoreDataList createListInstance(){
 		if( comparator != null ){
 			return new ScoreDataList(comparator);
 		}else{
@@ -36,22 +36,36 @@ public class DualScoreDataList {
 		}
 	}
 
+	ScoreDataList createListInstance(ScoreDataList list){
+		return createListInstance(list, true);
+	}
+
+	ScoreDataList createListInstance(ScoreDataList list, boolean refresh){
+		ScoreDataList newList;
+		if( refresh ){
+			newList = createListInstance();
+			newList.add(list);
+		}else{
+			newList = list;
+			newList.setComparator(comparator);
+		}
+		return newList;
+	}
+
 	public ScoreDataList getMaster(){
 		return master;
 	}
 
 	public void resetCurrent(){
-		current = master;
+		current = createListInstance(master);
 	}
 
 	public void setCurrent(ScoreDataList l0){
-		current = l0;
-		current.setComparator(comparator);
+		current = createListInstance(l0);
 	}
 
 	public ScoreDataList setCurrent(ScoreDataFinder f0){
-		current = master.createDataList(f0);
-		current.setComparator(comparator);
+		current = createListInstance(master.createDataList(f0), false);
 		return current;
 	}
 
@@ -82,8 +96,7 @@ public class DualScoreDataList {
 			return false;
 		}
 
-		master = exporter.getScoreDataList();
-		master.setComparator(comparator);
+		master = createListInstance(exporter.getScoreDataList());
 		return true;
 	}
 

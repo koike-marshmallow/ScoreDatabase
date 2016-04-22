@@ -54,6 +54,12 @@ public class ScoreDataList {
 		scores.add(idx, insert);
 	}
 
+	public void add(ScoreDataList list){
+		for(int i=0; i<list.getDataCount(); i++){
+			add(list.get(i));
+		}
+	}
+
 	public void remove(int id){
 		for(int i=0; i<scores.size(); i++){
 			if( scores.get(i).getId() == id ){
