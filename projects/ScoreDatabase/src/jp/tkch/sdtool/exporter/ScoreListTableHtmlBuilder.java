@@ -101,7 +101,7 @@ public class ScoreListTableHtmlBuilder {
 		for(int i=0; i<values.length; i++){
 			Element eTd = tdoc.createElement(tagName);
 			if( width != null && width.length > i ){
-				eTd.setAttribute("style", "width=" + width + "px;");
+				eTd.setAttribute("style", "width:" + width[i] + "px;");
 			}
 			eTd.setTextContent(values[i]);
 			eTr.appendChild(eTd);

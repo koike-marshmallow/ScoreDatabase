@@ -54,7 +54,7 @@ public class ScoreJindex{
 		return "undefined";
 	}
 
-	public ScoreDivisor getScoreDivisor(){
+	public static ScoreDivisor getScoreDivisor(){
 		return new ScoreDivisor(){
 
 			@Override

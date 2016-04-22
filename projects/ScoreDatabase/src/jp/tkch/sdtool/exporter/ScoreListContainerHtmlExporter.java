@@ -45,6 +45,7 @@ public class ScoreListContainerHtmlExporter extends ScoreListHtmlExporter {
 		cssList.add(new CSSBlock("table")
 			.addProperty(new CSSProperty("border-collapse", "collapse")));
 		cssList.add(new CSSBlock(".page-break")
+			.addProperty(new CSSProperty("visibility", "hidden"))
 			.addProperty(new CSSProperty("page-break-after", "always")));
 
 		Element eStyle = getDocument().createElement("style");
@@ -72,7 +73,7 @@ public class ScoreListContainerHtmlExporter extends ScoreListHtmlExporter {
 			eBody.appendChild(eTable);
 
 			if( i != (container.getListCount() - 1) ){
-				Element eSpan = getDocument().createElement("span");
+				Element eSpan = getDocument().createElement("hr");
 				eSpan.setAttribute("class", "page-break");
 				eBody.appendChild(eSpan);
 			}

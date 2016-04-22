@@ -12,6 +12,7 @@ import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 
+import jp.tkch.sdtool.exporter.ScoreListContainerHtmlExporter;
 import jp.tkch.sdtool.exporter.ScoreListXmlExporter;
 import jp.tkch.sdtool.gui.ScoreDataEditorView;
 import jp.tkch.sdtool.gui.ScoreDataEditorViewListener;
@@ -19,9 +20,11 @@ import jp.tkch.sdtool.gui.ScoreDataListTableModel;
 import jp.tkch.sdtool.gui.ScoreDataSearchView;
 import jp.tkch.sdtool.gui.ScoreDataSearchViewListener;
 import jp.tkch.sdtool.gui.ScoreTableView;
+import jp.tkch.sdtool.jindex.ScoreJindex;
 import jp.tkch.sdtool.model.ScoreData;
 import jp.tkch.sdtool.model.ScoreDataFinder;
 import jp.tkch.sdtool.model.ScoreDataList;
+import jp.tkch.sdtool.model.ScoreDataListContainer;
 import jp.tkch.sdtool.model.comparator.ScoreDataIdComparator;
 
 public class ScoreDatabaseManager
@@ -35,7 +38,7 @@ ScoreDataSearchViewListener{
 	private ScoreTableView tableView;
 	private ScoreDataEditorView editorView;
 	private ScoreDataSearchView searchView;
-	private JButton ctrlAdd, ctrlSearch, ctrlEdit;
+	private JButton ctrlAdd, ctrlSearch, ctrlEdit, ctrlExport;
 	private Queue<Integer> editQueue;
 	private int editMode;
 
@@ -54,9 +57,12 @@ ScoreDataSearchViewListener{
 		ctrlSearch.addActionListener(this);
 		ctrlEdit = new JButton("編集");
 		ctrlEdit.addActionListener(this);
+		ctrlExport = new JButton("出力");
+		ctrlExport.addActionListener(this);
 		tableView.addControlComponent(ctrlAdd);
 		tableView.addControlComponent(ctrlSearch);
 		tableView.addControlComponent(ctrlEdit);
+		tableView.addControlComponent(ctrlExport);
 		loadDatabase();
 		current = master;
 		reloadTable();
@@ -66,7 +72,7 @@ ScoreDataSearchViewListener{
 	public void reloadTable(){
 		tableView.setScoreDataListTableModel(new ScoreDataListTableModel(current));
 	}
-	
+
 	public void saveDatabase(){
 		ScoreListXmlExporter exporter = new ScoreListXmlExporter();
 		exporter.setScoreDataList(master);
@@ -78,7 +84,7 @@ ScoreDataSearchViewListener{
 			System.out.println(e0.getMessage());
 		}
 	}
-	
+
 	public void loadDatabase(){
 		ScoreListXmlExporter exporter = new ScoreListXmlExporter();
 		try{
@@ -124,10 +130,14 @@ ScoreDataSearchViewListener{
 			return false;
 		}
 		if( !isIndexValid(sdata.getIndex()) ){
+			int sel = JOptionPane.YES_OPTION;
 			if( parent != null ){
-				JOptionPane.showMessageDialog(parent, new JLabel("よみがなに無効な文字が含まれています"));
+				sel = JOptionPane.showConfirmDialog(
+					parent, new JLabel("よみがなに無効な文字が含まれています\nこのまま登録しますか？"));
 			}
-			return false;
+			if( sel != JOptionPane.YES_OPTION ){
+				return false;
+			}
 		}
 
 		master.add(sdata);
@@ -138,7 +148,7 @@ ScoreDataSearchViewListener{
 
 
 	public static boolean isIndexValid(String index){
-		return true;
+		return ScoreJindex.getType(index) != ScoreJindex.CTYPE_OTHERS;
 	}
 
 
@@ -196,6 +206,9 @@ ScoreDataSearchViewListener{
 			searchButtonPressed();
 		}else if( source == ctrlEdit ){
 			editButtonPressed();
+		}else if( source == ctrlExport ){
+			exportIndexHtml();
+			JOptionPane.showMessageDialog(tableView, "出力が終了しました");
 		}
 	}
 
@@ -237,6 +250,18 @@ ScoreDataSearchViewListener{
 		}
 		view.setListener(this);
 		return view;
+	}
+
+	public void exportIndexHtml(){
+		ScoreDataListContainer listc = ScoreDataListContainer
+			.createDividedScoreDataList(master, ScoreJindex.getScoreDivisor());
+		ScoreListContainerHtmlExporter exporter =
+			new ScoreListContainerHtmlExporter(listc);
+		try{
+			exporter.save(new File("output.html"));
+		}catch(IOException e0){
+			System.err.println(e0.getMessage());
+		}
 	}
 
 
