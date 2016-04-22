@@ -12,36 +12,32 @@ public class JindexCtype {
 	public static final int CTYPE_NUM = 101;
 	public static final int CTYPE_ALPH = 102;
 	public static final int CTYPE_HIRAGANA = 103;
-	public static final int CTYPE_KANAKANA = 104;
+	public static final int CTYPE_KATAKANA = 104;
 	public static final int CTYPE_KANJI = 105;
 	public static final int CTYPE_OTHERS = 106;
-	
+
 	public static int of(char c){
-		int block = UnicodeBlock.of(c);
-		
-		switch( block ){
-		case UnicodeBlock.HIRAGANA:
+		UnicodeBlock block = UnicodeBlock.of(c);
+
+		if( block == UnicodeBlock.HIRAGANA ){
 			return CTYPE_HIRAGANA;
-		case UnicodeBlock.KATAKANA:
+		}else if( block == UnicodeBlock.KATAKANA ){
 			return CTYPE_KATAKANA;
-		case UnicodeBlock.CJK_UNIFIED_IDEOGRAPHS:
+		}else if( block == UnicodeBlock.CJK_UNIFIED_IDEOGRAPHS ){
 			return CTYPE_KANJI;
-		case UnicodeBlock.BASIC_LATIN:
+		}else if( block == UnicodeBlock.BASIC_LATIN ){
 			if( c >= '0' && c <= '9' ){
 				return CTYPE_NUM;
-			}else if( 
-				(c >= 'A' && c <= 'Z') ||
-				(c >= 'a' && c <= 'z')
+			}else if(
+				(c >= 'A' && c <= 'Z') || (c >= 'a' && c <= 'z')
 			){
 				return CTYPE_ALPH;
 			}else{
 				return CTYPE_OTHERS;
 			}
-		default:
-			return CTYPE_OTHERS;
 		}
-		
-		return 0;
+
+		return CTYPE_OTHERS;
 	}
 
 
@@ -65,10 +61,10 @@ public class JindexCtype {
 				return col.compare(s1, s2);
 			}
 		});
-		
+
 		for(Character c : cs){
 			System.out.print(c + " ");
-			
+
 		}
 	}
 }
