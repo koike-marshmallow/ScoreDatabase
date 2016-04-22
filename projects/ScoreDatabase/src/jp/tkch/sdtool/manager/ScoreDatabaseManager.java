@@ -6,6 +6,7 @@ import java.awt.event.ActionListener;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayDeque;
+import java.util.Comparator;
 import java.util.Queue;
 
 import javax.swing.JButton;
@@ -33,17 +34,19 @@ ScoreDataSearchViewListener{
 	public static final int MODE_ADD = 1001;
 	public static final int MODE_EDIT = 1002;
 
+	public static Comparator<ScoreData> DEFAULT_COMPARATOR = new ScoreDataIdComparator();
+
 	private ScoreDataList master;
 	private ScoreDataList current;
 	private ScoreTableView tableView;
 	private ScoreDataEditorView editorView;
 	private ScoreDataSearchView searchView;
-	private JButton ctrlAdd, ctrlSearch, ctrlEdit, ctrlExport;
+	private JButton ctrlAdd, ctrlSearch, ctrlEdit, ctrlDelete, ctrlExport;
 	private Queue<Integer> editQueue;
 	private int editMode;
 
 	public ScoreDatabaseManager(){
-		master = new ScoreDataList(new ScoreDataIdComparator());
+		master = new ScoreDataList(DEFAULT_COMPARATOR);
 		editQueue = new ArrayDeque<Integer>();
 		current = master;
 		init();
@@ -57,11 +60,14 @@ ScoreDataSearchViewListener{
 		ctrlSearch.addActionListener(this);
 		ctrlEdit = new JButton("編集");
 		ctrlEdit.addActionListener(this);
+		ctrlDelete = new JButton("削除");
+		ctrlDelete.addActionListener(this);
 		ctrlExport = new JButton("出力");
 		ctrlExport.addActionListener(this);
 		tableView.addControlComponent(ctrlAdd);
 		tableView.addControlComponent(ctrlSearch);
 		tableView.addControlComponent(ctrlEdit);
+		tableView.addControlComponent(ctrlDelete);
 		tableView.addControlComponent(ctrlExport);
 		loadDatabase();
 		current = master;
@@ -96,7 +102,7 @@ ScoreDataSearchViewListener{
 		}
 		if( exporter.getScoreDataList() != null ){
 			master = exporter.getScoreDataList();
-			master.setComparator(new ScoreDataIdComparator());
+			master.setComparator(DEFAULT_COMPARATOR);
 		}
 	}
 
@@ -160,6 +166,7 @@ ScoreDataSearchViewListener{
 		}
 
 		current = master.createDataList(finder);
+		current.setComparator(DEFAULT_COMPARATOR);
 		reloadTable();
 		searchView.dispose();
 	}
@@ -190,7 +197,7 @@ ScoreDataSearchViewListener{
 				addButtonPressed();
 			}else if( editMode == MODE_EDIT ){
 				if( editQueue.size() > 0 ){
-					editorView = createEditorView(editQueue.remove());
+					editorView = createEditorView(editQueue.remove(), false);
 					editorView.setVisible(true);
 				}
 			}
@@ -209,11 +216,13 @@ ScoreDataSearchViewListener{
 		}else if( source == ctrlExport ){
 			exportIndexHtml();
 			JOptionPane.showMessageDialog(tableView, "出力が終了しました");
+		}else if( source == ctrlDelete ){
+			deleteButtonPressed();
 		}
 	}
 
 	public void addButtonPressed(){
-		editorView = createEditorView(-1);
+		editorView = createEditorView(0, true);
 		editorView.setVisible(true);
 		editMode = MODE_ADD;
 	}
@@ -227,20 +236,42 @@ ScoreDataSearchViewListener{
 	public void editButtonPressed(){
 		editQueue.clear();
 		if( tableView.getSelectedRowCount() > 0 ){
-			for(Integer row : tableView.getSelectedRows()){
-				editQueue.add(row);
+			for(int row : tableView.getSelectedRows()){
+				editQueue.add(current.get(row).getId());
 			}
-			editorView = createEditorView(editQueue.remove());
+			editorView = createEditorView(editQueue.remove(), false);
 			editMode = MODE_EDIT;
 			editorView.setVisible(true);
 		}
 	}
 
-	public ScoreDataEditorView createEditorView(int row){
+	public void deleteButtonPressed(){
+		int[] rows = tableView.getSelectedRows();
+		if( rows.length > 0 ){
+			int sel = JOptionPane.showConfirmDialog(tableView, new JLabel(
+				rows.length + "個のデータを削除してもよろしいですか？"));
+			if( sel == JOptionPane.YES_OPTION ){
+				int[] ids = new int[rows.length];
+				for(int i=0; i<rows.length; i++){
+					ids[i] = current.get(rows[i]).getId();
+				}
+				for(int i=0; i<ids.length; i++){
+					System.out.println("delete: " + rows[i] + ", " + ids[i]);
+					current.remove(ids[i]);
+					master.remove(ids[i]);
+				}
+			}
+		}
+		reloadTable();
+		saveDatabase();
+		return;
+	}
+
+	public ScoreDataEditorView createEditorView(int id, boolean isCreate){
 		ScoreDataEditorView view;
-		if( row >= 0 && row < tableView.getRowCount() ){
+		if( !isCreate && current.getById(id) != null ){
 			view = new ScoreDataEditorView();
-			ScoreData sdata = current.get(row);
+			ScoreData sdata = current.getById(id);
 			view.setScoreData(sdata);
 			view.setIdEditable(false);
 		}else{

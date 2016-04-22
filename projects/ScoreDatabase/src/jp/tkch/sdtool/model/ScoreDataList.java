@@ -70,6 +70,15 @@ public class ScoreDataList {
 		return null;
 	}
 
+	public ScoreData getById(int id){
+		for(ScoreData data : scores){
+			if( data.getId() == id ){
+				return new ScoreData(data);
+			}
+		}
+		return null;
+	}
+
 	public int getMaxId(){
 		if( scores.size() <= 0 ) return -1;
 		return Collections.max(scores, new ScoreDataIdComparator()).getId();
