@@ -5,6 +5,8 @@ import java.io.IOException;
 
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
+import javax.swing.filechooser.FileFilter;
+import javax.swing.filechooser.FileNameExtensionFilter;
 
 import jp.tkch.sdtool.exporter.ScoreListContainerHtmlExporter;
 import jp.tkch.sdtool.exporter.ScoreListHtmlExporter;
@@ -20,6 +22,10 @@ implements ScoreDataExportViewListener {
 	public static String MSG_FAILED = "出力に失敗しました";
 
 	private static String[] MENU = {"htmlファイル(一括)", "htmlファイル(個別)"};
+	private static FileFilter[] FILE_FILTER = {
+		new FileNameExtensionFilter("HTMLファイル", "html"),
+		new FileNameExtensionFilter("HTMLファイル", "html")
+	};
 
 	private ScoreDataList list;
 	private ScoreDataExportView exportView;
@@ -31,6 +37,7 @@ implements ScoreDataExportViewListener {
 
 	public void showExportView(){
 		exportView = new ScoreDataExportView(MENU);
+		exportView.setFileFilters(FILE_FILTER);
 		exportView.setListener(this);
 		exportView.setVisible(true);
 	}
@@ -86,5 +93,16 @@ implements ScoreDataExportViewListener {
 		}
 	}
 
+	public static void main(String[] args){
+		ScoreDataExportView view = new ScoreDataExportView(MENU);
+		view.setFileFilters(FILE_FILTER);
+		view.setListener(new ScoreDataExportViewListener(){
+			public void inputCompleted(int c, int s, File f){
+				System.out.println("CODE: " + c + "  SELECT: " + s + "  FILE: " + f);
+				view.dispose();
+			}
+		});
 
+		view.setVisible(true);
+	}
 }

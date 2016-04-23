@@ -13,6 +13,7 @@ import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
+import javax.swing.filechooser.FileFilter;
 
 public class ScoreDataExportView extends JFrame
 implements ActionListener{
@@ -24,6 +25,7 @@ implements ActionListener{
 		"マスターデータを出力します\n出力形式を選択して下さい";
 
 	private String[] menu;
+	private FileFilter[] filters;
 	private JComboBox<String> cbType;
 	private JButton btnApprove, btnCancel;
 	private ScoreDataExportViewListener listener;
@@ -36,6 +38,10 @@ implements ActionListener{
 
 	public void setListener(ScoreDataExportViewListener l0){
 		listener = l0;
+	}
+
+	public void setFileFilters(FileFilter[] f0){
+		filters = f0;
 	}
 
 	void buildFrame(){
@@ -57,6 +63,8 @@ implements ActionListener{
 		btnCancel.addActionListener(this);
 		pBottom.add(btnApprove);
 		pTop.add(pBottom);
+
+		add(pTop);
 	}
 
 
@@ -66,7 +74,13 @@ implements ActionListener{
 
 		if( source == btnApprove ){
 			int sel = cbType.getSelectedIndex();
+
 			JFileChooser chooser = new JFileChooser();
+			System.out.println("filters " + filters.length + ":" + sel);
+			if( filters != null && filters.length > sel ){
+				chooser.addChoosableFileFilter(filters[sel]);
+			}
+
 			int fsel = chooser.showSaveDialog(this);
 			if( fsel == JFileChooser.APPROVE_OPTION ){
 				File file = chooser.getSelectedFile();
