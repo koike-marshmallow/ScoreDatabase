@@ -14,6 +14,7 @@ import javax.swing.filechooser.FileNameExtensionFilter;
 import jp.tkch.sdtool.exporter.ScoreListCsvExporter;
 import jp.tkch.sdtool.gui.ScoreDataListTableModel;
 import jp.tkch.sdtool.gui.ScoreTableView;
+import jp.tkch.sdtool.model.ScoreData;
 import jp.tkch.sdtool.model.ScoreDataList;
 
 public class ScoreDatabaseCsvImportManager {
@@ -23,12 +24,18 @@ public class ScoreDatabaseCsvImportManager {
 	private JButton btnLoad, btnRemove, btnExcute;
 	private JRadioButton rbOver, rbSkip, rbRefresh;
 	private int recentErrorCount;
+	private ReloadListener listener;
 
 	public ScoreDatabaseCsvImportManager(DualScoreDataList l0){
 		list = l0;
 		tableView = null;
 		tmpList = null;
-		resentErrorCount = 0;
+		recentErrorCount = 0;
+		listener = null;
+	}
+
+	public void setListener(ReloadListener l0){
+		listener = l0;
 	}
 
 	void createTableView(){
@@ -60,13 +67,13 @@ public class ScoreDatabaseCsvImportManager {
 		ButtonGroup bGroup = new ButtonGroup();
 		rbOver = new JRadioButton("上書き", true);
 		bGroup.add(rbOver);
-		tableView.add(rbOver);
+		tableView.addControlComponent(rbOver);
 		rbSkip = new JRadioButton("スキップ");
 		bGroup.add(rbSkip);
-		tableView.add(rbSkip);
-		rbRefresh = new JRadioButton("元のデータを削除");
+		tableView.addControlComponent(rbSkip);
+		rbRefresh = new JRadioButton("初期化");
 		bGroup.add(rbRefresh);
-		tableView.add(rbRefresh);
+		tableView.addControlComponent(rbRefresh);
 	}
 
 	void showTableView(){
@@ -134,8 +141,29 @@ public class ScoreDatabaseCsvImportManager {
 	}
 
 	void excuteButtonPressed(){
+		if( tmpList != null ){
+			if( rbRefresh.isSelected() ){
+				list.getMaster().clear();
+			}
 
+			for(int i=0; i<tmpList.getDataCount(); i++){
+				ScoreData data = tmpList.get(i);
+				if( list.getMaster().isIdRegisted(data.getId()) ){
+					if( rbOver.isSelected() ){
+						list.getMaster().add(data);
+					}
+				}else{
+					list.getMaster().add(data);
+				}
+			}
+		}
+
+		tableView.alert("データを登録しました");
+		tableView.dispose();
+		if( listener != null ) listener.reload();
 	}
 
-
+	public void excute(){
+		showTableView();
+	}
 }

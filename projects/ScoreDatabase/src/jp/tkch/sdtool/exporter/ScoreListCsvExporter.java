@@ -100,7 +100,7 @@ public class ScoreListCsvExporter {
 		if( csvData != null ){
 			for(int i=0; i<csvData.size(); i++){
 				String[] row = csvData.get(i);
-				if( row.length > 0 && row[0].charAt(0) != '#' ){
+				if( row.length > 0 && !row[0].equals("") && row[0].charAt(0) != '#'){
 					ScoreData data = parseRow(row);
 					if( data != null ){
 						list.add(data);

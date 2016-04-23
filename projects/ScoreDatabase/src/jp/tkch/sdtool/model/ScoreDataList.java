@@ -31,6 +31,10 @@ public class ScoreDataList {
 		return false;
 	}
 
+	public void clear(){
+		scores.clear();
+	}
+
 	public void add(ScoreData data){
 		int idx;
 		ScoreData insert = new ScoreData(data);
