@@ -45,6 +45,7 @@ implements ActionListener{
 	}
 
 	void buildFrame(){
+		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 		setBounds(100, 100, 480, 160);
 		JPanel pTop = new JPanel(new GridLayout(3, 1));
 

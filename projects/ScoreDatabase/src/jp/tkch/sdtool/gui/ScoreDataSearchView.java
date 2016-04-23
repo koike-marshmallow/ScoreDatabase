@@ -37,7 +37,7 @@ implements ActionListener{
 	}
 
 	private void buildFrame(){
-		//setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 		setBounds(100, 100, 480, 320);
 
 		JPanel pTop = new JPanel(new BorderLayout());
