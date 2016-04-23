@@ -116,4 +116,12 @@ public class ScoreDataList {
 	public ScoreData[] toArray(){
 		return scores.toArray(new ScoreData[scores.size()]);
 	}
+
+	public void show(){
+		for(int i=0; i<scores.size(); i++){
+			ScoreData data = scores.get(i);
+			System.out.format("[%d: %s %s]\n",
+				data.getId(), data.getTitle(), data.getIndex());
+		}
+	}
 }

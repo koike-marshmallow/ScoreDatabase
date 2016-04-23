@@ -16,6 +16,7 @@ import jp.tkch.sdtool.gui.ScoreDataExportViewListener;
 import jp.tkch.sdtool.jindex.ScoreJindex;
 import jp.tkch.sdtool.model.ScoreDataList;
 import jp.tkch.sdtool.model.ScoreDataListContainer;
+import jp.tkch.sdtool.model.comparator.ScoreDataIndexComparator;
 
 public class ScoreDatabaseExportManager
 implements ScoreDataExportViewListener {
@@ -83,7 +84,7 @@ implements ScoreDataExportViewListener {
 		if( isIndex ){
 			exporter = new ScoreListContainerHtmlExporter(
 				ScoreDataListContainer.createDividedScoreDataList
-				(dataList, ScoreJindex.getScoreDivisor()));
+				(dataList, ScoreJindex.getScoreDivisor(), new ScoreDataIndexComparator()));
 		}else{
 			exporter = new ScoreListHtmlExporter(dataList);
 		}

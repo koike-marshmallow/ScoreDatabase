@@ -1,6 +1,7 @@
 package jp.tkch.sdtool.model;
 
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 
 public class ScoreDataListContainer {
@@ -66,6 +67,24 @@ public class ScoreDataListContainer {
 	}
 
 	public static ScoreDataListContainer createDividedScoreDataList
+	(ScoreDataList list, ScoreDivisor divisor, Comparator<ScoreData> cmp){
+		ScoreDataListContainer container = new ScoreDataListContainer();
+
+		for(int i=0; i<divisor.getGroupCount(); i++){
+			container.add(divisor.getGroupLabel(i), new ScoreDataList(cmp));
+		}
+
+		for(int i=0; i<list.getDataCount(); i++){
+			if( divisor.isValid(list.get(i)) ){
+				container.getList(
+					divisor.groupNumberOf(list.get(i))).add(list.get(i));
+			}
+		}
+
+		return container;
+	}
+
+	public static ScoreDataListContainer createDividedScoreDataList
 	(ScoreDataList list, ScoreDivisor divisor){
 		ScoreDataListContainer container = new ScoreDataListContainer();
 
@@ -81,5 +100,13 @@ public class ScoreDataListContainer {
 		}
 
 		return container;
+	}
+
+	public void show(){
+		for(int i=0; i<lists.size(); i++){
+			ScoreDataList list = lists.get(i);
+			System.out.println("--CONTAINER(" + i + ")" + labels.get(i));
+			list.show();
+		}
 	}
 }
