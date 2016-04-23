@@ -35,12 +35,17 @@ implements ScoreDataEditorViewListener{
 		master = m0;
 		dataIdQueue = new ArrayDeque<Integer>();
 		isEdit = false;
+		rlistener = null;
 	}
 
 	public void enqueue(int id){
 		if( master.isIdRegisted(id) ){
 			dataIdQueue.add(id);
 		}
+	}
+
+	public void setListener(ReloadListener l0){
+		rlistener = l0;
 	}
 
 	ScoreDataEditorView createEditorView(int id, boolean isCreate){
@@ -70,6 +75,7 @@ implements ScoreDataEditorViewListener{
 			editorView = createEditorView(0, true);
 		}
 
+		editorView.setListener(this);
 		editorView.setVisible(true);
 	}
 
