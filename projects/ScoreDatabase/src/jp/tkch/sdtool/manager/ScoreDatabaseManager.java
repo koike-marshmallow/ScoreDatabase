@@ -12,8 +12,7 @@ import jp.tkch.sdtool.gui.ScoreTableView;
 import jp.tkch.sdtool.model.ScoreData;
 import jp.tkch.sdtool.model.comparator.ScoreDataIdComparator;
 
-public class ScoreDatabaseManager
-implements ReloadListener{
+public class ScoreDatabaseManager{
 	static Comparator<ScoreData> DEFAULT_COMPARATOR = new ScoreDataIdComparator();
 	static File DEFAULT_DB_FILE = new File("db.xml");
 
@@ -21,7 +20,6 @@ implements ReloadListener{
 	private ScoreTableView tableView;
 	private JButton btnAdd, btnEdit, btnDelete;
 	private JButton btnSearch, btnExport;
-
 
 
 	public void init(){
@@ -83,7 +81,12 @@ implements ReloadListener{
 	public void addButtonPressed(){
 		ScoreDatabaseEditManager manager =
 			new ScoreDatabaseEditManager(tableView, list.getMaster());
-		manager.setListener(this);
+		manager.setListener(new ReloadListener(){
+			public void reload(){
+				commitTable(true);
+			}
+		});
+
 		manager.excuteAddMode();
 	}
 
@@ -91,7 +94,12 @@ implements ReloadListener{
 		if( tableView.getSelectedRowCount() > 0 ){
 			ScoreDatabaseEditManager manager =
 				new ScoreDatabaseEditManager(tableView, list.getMaster());
-			manager.setListener(this);
+			manager.setListener(new ReloadListener(){
+				public void reload(){
+					commitTable(true);
+				}
+			});
+
 			for(int row : tableView.getSelectedRows()){
 				manager.enqueue(list.getCurrent().get(row).getId());
 			}
@@ -105,7 +113,12 @@ implements ReloadListener{
 		if( tableView.getSelectedRowCount() > 0 ){
 			ScoreDatabaseEditManager manager =
 				new ScoreDatabaseEditManager(tableView, list.getMaster());
-			manager.setListener(this);
+			manager.setListener(new ReloadListener(){
+				public void reload(){
+					commitTable(true);
+				}
+			});
+
 			for(int row : tableView.getSelectedRows()){
 				manager.enqueue(list.getCurrent().get(row).getId());
 			}
@@ -118,7 +131,12 @@ implements ReloadListener{
 	public void searchButtonPressed(){
 		ScoreDatabaseSearchManager manager =
 			new ScoreDatabaseSearchManager(list);
-		manager.setListener(this);
+		manager.setListener(new ReloadListener(){
+			public void reload(){
+				commitTable(false);
+			}
+		});
+
 		manager.excute();
 	}
 
@@ -128,9 +146,18 @@ implements ReloadListener{
 		manager.excute();
 	}
 
-	public void reload(){
+	public void commitTable(boolean currentSync){
 		list.saveDatabase();
+		if( currentSync ){
+			list.resetCurrent();
+		}
 		tableView.setScoreDataListTableModel(
 			new ScoreDataListTableModel(list.getCurrent()));
+	}
+
+
+	public static void main(String[] args){
+		ScoreDatabaseManager manager = new ScoreDatabaseManager();
+		manager.init();
 	}
 }

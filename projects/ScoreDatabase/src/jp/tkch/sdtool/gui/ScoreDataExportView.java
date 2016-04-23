@@ -61,7 +61,7 @@ implements ActionListener{
 		pBottom.add(btnApprove);
 		btnCancel = new JButton("キャンセル");
 		btnCancel.addActionListener(this);
-		pBottom.add(btnApprove);
+		pBottom.add(btnCancel);
 		pTop.add(pBottom);
 
 		add(pTop);
@@ -76,7 +76,6 @@ implements ActionListener{
 			int sel = cbType.getSelectedIndex();
 
 			JFileChooser chooser = new JFileChooser();
-			System.out.println("filters " + filters.length + ":" + sel);
 			if( filters != null && filters.length > sel ){
 				chooser.addChoosableFileFilter(filters[sel]);
 			}

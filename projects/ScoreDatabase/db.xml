@@ -21,4 +21,18 @@
     <param key="publisher" value=""/>
     <param key="comment" value=""/>
   </score>
+  <score id="1004">
+    <title value="マーチ「プロヴァンスの風」"/>
+    <index value="プロヴァンスのカゼ"/>
+    <param key="author" value=""/>
+    <param key="publisher" value=""/>
+    <param key="comment" value=""/>
+  </score>
+  <score id="1005">
+    <title value="Disco 70's"/>
+    <index value="ディスコセブンティーズ"/>
+    <param key="author" value=""/>
+    <param key="publisher" value=""/>
+    <param key="comment" value=""/>
+  </score>
 </scores>

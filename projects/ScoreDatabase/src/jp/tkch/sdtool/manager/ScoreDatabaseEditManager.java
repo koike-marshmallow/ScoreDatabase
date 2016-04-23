@@ -52,11 +52,11 @@ implements ScoreDataEditorViewListener{
 		ScoreDataEditorView view = new ScoreDataEditorView();
 
 		if( isCreate || !master.isIdRegisted(id) ){
-			view.setScoreData(master.getById(id));
-			view.setIdEditable(false);
-		}else{
 			int nextId = Math.max(master.getMaxId()+1, 1001);
 			view.setScoreData(new ScoreData(nextId, "", ""));
+		}else{
+			view.setScoreData(master.getById(id));
+			view.setIdEditable(false);
 		}
 
 		view.setListener(this);
