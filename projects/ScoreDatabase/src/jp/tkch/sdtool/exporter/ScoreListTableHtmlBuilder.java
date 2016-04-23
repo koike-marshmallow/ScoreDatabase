@@ -95,7 +95,7 @@ public class ScoreListTableHtmlBuilder {
 			String ids = null;
 			if( idLabel != null ) ids = idLabel + (i+1);
 			eTable.appendChild(
-				createScoreDataRowElement(doc, list.get(i), ids));
+				createScoreDataRowElement(doc, list.get(i), ids, width));
 		}
 		eDiv.appendChild(eTable);
 
@@ -118,7 +118,7 @@ public class ScoreListTableHtmlBuilder {
 	}
 
 	public static Element createScoreDataRowElement
-	(Document tdoc, ScoreData data, String ids){
+	(Document tdoc, ScoreData data, String ids, int[] wd){
 		String[] values = new String[5];
 		if( ids != null ){
 			values[0] = ids;
@@ -129,6 +129,6 @@ public class ScoreListTableHtmlBuilder {
 		values[2] = data.getParameter("author");
 		values[3] = data.getParameter("publisher");
 		values[4] = data.getParameter("comment");
-		return createTableRowElement(tdoc, values, null, false);
+		return createTableRowElement(tdoc, values, wd, false);
 	}
 }

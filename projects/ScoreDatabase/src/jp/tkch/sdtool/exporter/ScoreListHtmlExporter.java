@@ -72,7 +72,7 @@ public class ScoreListHtmlExporter {
 		CSSBlockList cssList = new CSSBlockList();
 
 		cssList.add(new CSSBlock("body")
-			.addProperty(new CSSProperty("width", "800px")));
+			.addProperty(new CSSProperty("width", "820px")));
 		cssList.add(new CSSBlock("th,td")
 			.addProperty(new CSSProperty("border", "1px #000 solid"))
 			.addProperty(new CSSProperty("padding", "4px")));
