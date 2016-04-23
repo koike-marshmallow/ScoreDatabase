@@ -23,6 +23,9 @@ implements ScoreDataExportViewListener {
 	public static String MSG_SUCCESS = "出力しました";
 	public static String MSG_FAILED = "出力に失敗しました";
 
+	public static String[] HTML_IDX_IDLABEL =
+		{"英-", "あ-", "か-", "さ-", "た-", "な-", "は-", "ま-", "や-", "ら-", "わ-", "他-"};
+
 	private static String[] MENU = {"htmlファイル(一括)", "htmlファイル(個別)", "csvファイル"};
 	private static FileFilter[] FILE_FILTER = {
 		new FileNameExtensionFilter("HTMLファイル", "html"),
@@ -68,9 +71,17 @@ implements ScoreDataExportViewListener {
 	public boolean export(int type, File fp){
 		switch( type ){
 		case 0:
-			return exportHtml(list, fp, false);
+			return exportHtml(list, fp, false, false);
 		case 1:
-			return exportHtml(list, fp, true);
+			switch( JOptionPane.showConfirmDialog(exportView,
+				new JLabel("インデックス変換機能を使用しますか？")) ){
+			case JOptionPane.YES_OPTION:
+				return exportHtml(list, fp, true, true);
+			case JOptionPane.NO_OPTION:
+				return exportHtml(list, fp, true, false);
+			case JOptionPane.CANCEL_OPTION:
+				return false;
+			}
 		case 2:
 			return exportCsv(list, fp);
 		}
@@ -78,13 +89,17 @@ implements ScoreDataExportViewListener {
 		return false;
 	}
 
-	static boolean exportHtml(ScoreDataList dataList, File fp, boolean isIndex){
+	static boolean exportHtml
+	(ScoreDataList dataList, File fp, boolean isIndex, boolean idConv){
 		ScoreListHtmlExporter exporter;
 
 		if( isIndex ){
 			exporter = new ScoreListContainerHtmlExporter(
 				ScoreDataListContainer.createDividedScoreDataList
 				(dataList, ScoreJindex.getScoreDivisor(), new ScoreDataIndexComparator()));
+			if( idConv ){
+				((ScoreListContainerHtmlExporter)exporter).setIdLabels(HTML_IDX_IDLABEL);
+			}
 		}else{
 			exporter = new ScoreListHtmlExporter(dataList);
 		}
