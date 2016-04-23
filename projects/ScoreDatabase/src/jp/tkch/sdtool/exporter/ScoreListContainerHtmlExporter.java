@@ -10,10 +10,12 @@ import jp.tkch.sdtool.model.ScoreDataListContainer;
 
 public class ScoreListContainerHtmlExporter extends ScoreListHtmlExporter {
 	private ScoreDataListContainer container;
+	private String[] idLabels;
 
 
 	public ScoreListContainerHtmlExporter(){
 		container = null;
+		idLabels = null;
 	}
 
 	public ScoreListContainerHtmlExporter(ScoreDataListContainer c0){
@@ -32,6 +34,10 @@ public class ScoreListContainerHtmlExporter extends ScoreListHtmlExporter {
 
 	public ScoreDataListContainer getScoreDataListContainer(){
 		return container;
+	}
+
+	public void setIdLabels(String[] l0){
+		idLabels = l0;
 	}
 
 	public Element createStyleElement(){
@@ -69,6 +75,9 @@ public class ScoreListContainerHtmlExporter extends ScoreListHtmlExporter {
 		for(int i=0; i<container.getListCount(); i++){
 			tableBuilder.setScoreDataList(container.getList(i));
 			tableBuilder.setLabel(container.getLabel(i));
+			if( idLabels != null && idLabels.length > i ){
+				tableBuilder.setIdLabel(idLabels[i]);
+			}
 			Element eTable = tableBuilder.buildScoreListTable();
 			eBody.appendChild(eTable);
 

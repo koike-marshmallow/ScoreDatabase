@@ -14,12 +14,14 @@ public class ScoreListTableHtmlBuilder {
 	private Document doc;
 	private String label;
 	private int[] width;
+	private String idLabel;
 
 	public ScoreListTableHtmlBuilder(){
 		list = null;
 		label = null;
 		width = null;
 		doc = null;
+		idLabel = null;
 	}
 
 	public ScoreListTableHtmlBuilder(Document d0){
@@ -69,6 +71,10 @@ public class ScoreListTableHtmlBuilder {
 		return doc;
 	}
 
+	public void setIdLabel(String il0){
+		idLabel = il0;
+	}
+
 	public Element buildScoreListTable(){
 		if( doc == null || list == null ){
 			return null;
@@ -86,8 +92,10 @@ public class ScoreListTableHtmlBuilder {
 		eTable.appendChild(
 			createTableRowElement(doc, HEAD_LABELS, width, true));
 		for(int i=0; i<list.getDataCount(); i++){
+			String ids = null;
+			if( idLabel != null ) ids = idLabel + (i+1);
 			eTable.appendChild(
-				createScoreDataRowElement(doc, list.get(i)));
+				createScoreDataRowElement(doc, list.get(i), ids));
 		}
 		eDiv.appendChild(eTable);
 
@@ -109,9 +117,14 @@ public class ScoreListTableHtmlBuilder {
 		return eTr;
 	}
 
-	public static Element createScoreDataRowElement(Document tdoc, ScoreData data){
+	public static Element createScoreDataRowElement
+	(Document tdoc, ScoreData data, String ids){
 		String[] values = new String[5];
-		values[0] = String.valueOf(data.getId());
+		if( ids != null ){
+			values[0] = ids;
+		}else{
+			values[0] = String.valueOf(data.getId());
+		}
 		values[1] = data.getTitle();
 		values[2] = data.getParameter("author");
 		values[3] = data.getParameter("publisher");
