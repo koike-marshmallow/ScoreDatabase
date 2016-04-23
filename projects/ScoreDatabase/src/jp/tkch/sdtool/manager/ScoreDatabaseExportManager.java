@@ -9,6 +9,7 @@ import javax.swing.filechooser.FileFilter;
 import javax.swing.filechooser.FileNameExtensionFilter;
 
 import jp.tkch.sdtool.exporter.ScoreListContainerHtmlExporter;
+import jp.tkch.sdtool.exporter.ScoreListCsvExporter;
 import jp.tkch.sdtool.exporter.ScoreListHtmlExporter;
 import jp.tkch.sdtool.gui.ScoreDataExportView;
 import jp.tkch.sdtool.gui.ScoreDataExportViewListener;
@@ -21,10 +22,11 @@ implements ScoreDataExportViewListener {
 	public static String MSG_SUCCESS = "出力しました";
 	public static String MSG_FAILED = "出力に失敗しました";
 
-	private static String[] MENU = {"htmlファイル(一括)", "htmlファイル(個別)"};
+	private static String[] MENU = {"htmlファイル(一括)", "htmlファイル(個別)", "csvファイル"};
 	private static FileFilter[] FILE_FILTER = {
 		new FileNameExtensionFilter("HTMLファイル", "html"),
-		new FileNameExtensionFilter("HTMLファイル", "html")
+		new FileNameExtensionFilter("HTMLファイル", "html"),
+		new FileNameExtensionFilter("CSVファイル", "csv")
 	};
 
 	private ScoreDataList list;
@@ -68,6 +70,8 @@ implements ScoreDataExportViewListener {
 			return exportHtml(list, fp, false);
 		case 1:
 			return exportHtml(list, fp, true);
+		case 2:
+			return exportCsv(list, fp);
 		}
 
 		return false;
@@ -92,6 +96,24 @@ implements ScoreDataExportViewListener {
 				return false;
 			}
 		}catch(IOException e0){
+			System.err.println("file error: " + e0.getMessage());
+			return false;
+		}
+	}
+
+	static boolean exportCsv(ScoreDataList dataList, File fp){
+		ScoreListCsvExporter exporter;
+
+		exporter = new ScoreListCsvExporter(dataList);
+
+		try {
+			if( exporter.save(fp) ){
+				return true;
+			}else{
+				System.err.println("export error");
+				return false;
+			}
+		} catch(IOException e0){
 			System.err.println("file error: " + e0.getMessage());
 			return false;
 		}

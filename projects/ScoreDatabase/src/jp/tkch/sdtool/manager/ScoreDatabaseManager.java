@@ -19,7 +19,7 @@ public class ScoreDatabaseManager{
 	private DualScoreDataList list;
 	private ScoreTableView tableView;
 	private JButton btnAdd, btnEdit, btnDelete;
-	private JButton btnSearch, btnExport;
+	private JButton btnSearch, btnExport, btnImport;
 
 
 	public void init(){
@@ -71,6 +71,13 @@ public class ScoreDatabaseManager{
 			}
 		});
 		tableView.addControlComponent(btnExport);
+		btnImport = new JButton("csvからインポート");
+		btnImport.addActionListener(new ActionListener(){
+			public void actionPerformed(ActionEvent e0){
+				importButtonPressed();
+			}
+		});
+		tableView.addControlComponent(btnImport);
 
 		//テーブルを設定
 		tableView.setScoreDataListTableModel(
@@ -146,6 +153,17 @@ public class ScoreDatabaseManager{
 	void exportButtonPressed(){
 		ScoreDatabaseExportManager manager =
 			new ScoreDatabaseExportManager(list.getCurrent());
+		manager.excute();
+	}
+
+	void importButtonPressed(){
+		ScoreDatabaseCsvImportManager manager =
+			new ScoreDatabaseCsvImportManager(list);
+		manager.setListener(new ReloadListener(){
+			public void reload(){
+				commitTable(true);
+			}
+		});
 		manager.excute();
 	}
 
