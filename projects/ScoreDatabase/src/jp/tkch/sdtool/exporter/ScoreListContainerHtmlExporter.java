@@ -49,7 +49,8 @@ public class ScoreListContainerHtmlExporter extends ScoreListHtmlExporter {
 			.addProperty(new CSSProperty("border", "1px #000 solid"))
 			.addProperty(new CSSProperty("padding", "4px")));
 		cssList.add(new CSSBlock("table")
-			.addProperty(new CSSProperty("border-collapse", "collapse")));
+			.addProperty(new CSSProperty("border-collapse", "collapse"))
+			.addProperty(new CSSProperty("table-layout", "fixed")));
 		cssList.add(new CSSBlock(".page-break")
 			.addProperty(new CSSProperty("visibility", "hidden"))
 			.addProperty(new CSSProperty("page-break-after", "always")));

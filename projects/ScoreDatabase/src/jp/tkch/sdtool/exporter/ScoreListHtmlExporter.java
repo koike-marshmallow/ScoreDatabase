@@ -77,7 +77,8 @@ public class ScoreListHtmlExporter {
 			.addProperty(new CSSProperty("border", "1px #000 solid"))
 			.addProperty(new CSSProperty("padding", "4px")));
 		cssList.add(new CSSBlock("table")
-			.addProperty(new CSSProperty("border-collapse", "collapse")));
+			.addProperty(new CSSProperty("border-collapse", "collapse"))
+			.addProperty(new CSSProperty("table-layout", "fixed")));
 
 		Element eStyle = doc.createElement("style");
 		eStyle.setTextContent(cssList.toString());
