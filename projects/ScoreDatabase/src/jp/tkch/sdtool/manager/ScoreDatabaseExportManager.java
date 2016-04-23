@@ -42,6 +42,10 @@ implements ScoreDataExportViewListener {
 		exportView.setVisible(true);
 	}
 
+	public void excute(){
+		showExportView();
+	}
+
 	@Override
 	public void inputCompleted(int code, int sType, File file) {
 		if( code == ScoreDataExportView.APPROVE ){

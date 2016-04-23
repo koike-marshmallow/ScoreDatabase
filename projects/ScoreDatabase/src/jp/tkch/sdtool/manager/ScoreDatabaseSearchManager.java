@@ -19,10 +19,14 @@ implements ScoreDataSearchViewListener {
 		listener = l0;
 	}
 
-	void showEditorView(){
+	public void showEditorView(){
 		searchView = new ScoreDataSearchView();
 		searchView.setListener(this);
 		searchView.setVisible(true);
+	}
+
+	public void excute(){
+		showEditorView();
 	}
 
 	@Override
