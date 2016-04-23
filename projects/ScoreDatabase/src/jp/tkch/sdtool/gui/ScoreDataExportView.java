@@ -45,7 +45,7 @@ implements ActionListener{
 	}
 
 	void buildFrame(){
-		setBounds(100, 100, 480, 320);
+		setBounds(100, 100, 480, 160);
 		JPanel pTop = new JPanel(new GridLayout(3, 1));
 
 		pTop.add(new JLabel(MSG_DISCRIPTION));

@@ -174,6 +174,7 @@ implements ScoreDataEditorViewListener{
 		if(
 			code == ScoreDataEditorView.CANCEL
 		){
+			editorView.dispose();
 			return;
 		}
 
