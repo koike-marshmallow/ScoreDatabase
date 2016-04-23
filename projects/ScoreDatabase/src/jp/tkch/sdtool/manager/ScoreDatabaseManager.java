@@ -29,10 +29,9 @@ public class ScoreDatabaseManager{
 		list.resetCurrent();
 
 		buildTableView();
-		tableView.setVisible(true);
 	}
 
-	public void buildTableView(){
+	void buildTableView(){
 		//インスタンス初期化
 		tableView = new ScoreTableView();
 
@@ -78,7 +77,11 @@ public class ScoreDatabaseManager{
 			new ScoreDataListTableModel(list.getCurrent()));
 	}
 
-	public void addButtonPressed(){
+	public void excute(){
+		tableView.setVisible(true);
+	}
+
+	void addButtonPressed(){
 		ScoreDatabaseEditManager manager =
 			new ScoreDatabaseEditManager(tableView, list.getMaster());
 		manager.setListener(new ReloadListener(){
@@ -90,7 +93,7 @@ public class ScoreDatabaseManager{
 		manager.excuteAddMode();
 	}
 
-	public void editButtonPressed(){
+	void editButtonPressed(){
 		if( tableView.getSelectedRowCount() > 0 ){
 			ScoreDatabaseEditManager manager =
 				new ScoreDatabaseEditManager(tableView, list.getMaster());
@@ -109,7 +112,7 @@ public class ScoreDatabaseManager{
 		}
 	}
 
-	public void deleteButtonPressed(){
+	void deleteButtonPressed(){
 		if( tableView.getSelectedRowCount() > 0 ){
 			ScoreDatabaseEditManager manager =
 				new ScoreDatabaseEditManager(tableView, list.getMaster());
@@ -128,7 +131,7 @@ public class ScoreDatabaseManager{
 		}
 	}
 
-	public void searchButtonPressed(){
+	void searchButtonPressed(){
 		ScoreDatabaseSearchManager manager =
 			new ScoreDatabaseSearchManager(list);
 		manager.setListener(new ReloadListener(){
@@ -140,13 +143,13 @@ public class ScoreDatabaseManager{
 		manager.excute();
 	}
 
-	public void exportButtonPressed(){
+	void exportButtonPressed(){
 		ScoreDatabaseExportManager manager =
 			new ScoreDatabaseExportManager(list.getCurrent());
 		manager.excute();
 	}
 
-	public void commitTable(boolean currentSync){
+	void commitTable(boolean currentSync){
 		list.saveDatabase();
 		if( currentSync ){
 			list.resetCurrent();
@@ -159,5 +162,6 @@ public class ScoreDatabaseManager{
 	public static void main(String[] args){
 		ScoreDatabaseManager manager = new ScoreDatabaseManager();
 		manager.init();
+		manager.excute();
 	}
 }
